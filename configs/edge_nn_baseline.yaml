@@ -1,0 +1,8 @@
+entity: salehah
+project: edge_extraction
+run_id: 1m3yxeop
+
+# data folder settings
+rel_data_path: ./results/
+folder_name: edge_nn
+run_name: baseline
