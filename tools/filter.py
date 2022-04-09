@@ -1,15 +1,13 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 import numpy as np
 from scipy.ndimage import filters
 from scipy.signal import gaussian
 
 if TYPE_CHECKING:
-    import pandas as pd
-
-    TimeSeries = Union[np.ndarray, pd.Series]
+    from tools.data_types import TimeSeries
 
 
 def smooth(vals: list, k: int = 10) -> np.ndarray:

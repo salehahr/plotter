@@ -1,0 +1,9 @@
+project: edge_extraction
+run_id: null
+
+# data folder settings
+folder_name: edge_nn
+run_name: null
+
+# sweep
+sweep_id: 6k2b57dp
