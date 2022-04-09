@@ -14,6 +14,43 @@ from matplotlib.path import Path
 if TYPE_CHECKING:
     from tools.data_types import TimeSeries
 
+COLWIDTH = 442.11  # pt
+
+
+def set_size(
+    width_pt: float, fraction: int = 1, subplots: Tuple[int, int] = (1, 1)
+) -> Tuple[float, float]:
+    """Set figure dimensions to sit nicely in our document.
+    Source: https://jwalton.info/Matplotlib-latex-PGF/
+
+    Parameters
+    ----------
+    width_pt: float
+            Document width in points
+    fraction: float, optional
+            Fraction of the width which you wish the figure to occupy
+    subplots: array-like, optional
+            The number of rows and columns of subplots.
+    Returns
+    -------
+    fig_dim: tuple
+            Dimensions of figure in inches
+    """
+    # Width of figure (in pts)
+    fig_width_pt = width_pt * fraction
+    # Convert from pt to inches
+    inches_per_pt = 1 / 72.27
+
+    # Golden ratio to set aesthetic figure height
+    golden_ratio = (5 ** 0.5 - 1) / 2
+
+    # Figure width in inches
+    fig_width_in = fig_width_pt * inches_per_pt
+    # Figure height in inches
+    fig_height_in = fig_width_in * golden_ratio * (subplots[0] / subplots[1])
+
+    return fig_width_in, fig_height_in
+
 
 def plot_smoothed(orig: TimeSeries, smoothed: TimeSeries) -> None:
     plt.plot(orig)
@@ -22,11 +59,25 @@ def plot_smoothed(orig: TimeSeries, smoothed: TimeSeries) -> None:
 
 
 def hyperparams(
-    df: pd.DataFrame, show: bool = False, tikz: Optional[str] = None
+    df: pd.DataFrame,
+    show: bool = False,
+    tikz: Optional[str] = None,
+    backend: Optional[str] = None,
 ) -> None:
     """
     Modified from source: https://stackoverflow.com/questions/8230638/.
     """
+    if backend == "pgf":
+        mpl.use("pgf")
+        mpl.rcParams.update(
+            {
+                "pgf.texsystem": "pdflatex",
+                "font.family": "serif",
+                "text.usetex": True,
+                "pgf.rcfonts": False,
+            }
+        )
+
     columns = ["n_conv2_blocks", "n_conv3_blocks", "n_filters", "best_val_precision"]
     column_ticks = [[1, 2, 3], [1, 2, 3], [2, 3, 4, 5, 6], np.linspace(0, 1, 5 + 1)]
 
@@ -39,8 +90,9 @@ def hyperparams(
     # transform data to size of leftmost column
     Z = _transform_tuning_data(df[columns], col_mins, col_diffs)
 
+    figsize = set_size(COLWIDTH)
     fig, (host, col_ax) = plt.subplots(
-        1, 2, gridspec_kw={"width_ratios": [30, 1]}, figsize=[10, 5]
+        1, 2, gridspec_kw={"width_ratios": [30, 1]}, figsize=figsize
     )
     axes = [host] + [host.twinx() for _ in range(num_params - 1)]
 
@@ -103,20 +155,35 @@ def hyperparams(
     plt.tight_layout()
 
     if tikz:
-        save_tikz(tikz, fig)
+        filepath = _get_save_filepath(tikz)
+        if backend == "pgf":
+            plt.savefig(filepath.replace("tex", "pgf"))
+
+            # noinspection PyUnreachableCode
+            # compile and preview latex file
+            if __debug__:
+                compile_tikz("main-pgf.tex")
+            return
+        elif backend == "tpl":
+            save_tikz(filepath, fig)
+        else:
+            raise Exception
 
     if show:
         plt.show()
 
 
-def save_tikz(filename: str, figure):
+def _get_save_filepath(filename: str) -> str:
     # noinspection PyUnreachableCode
     if __debug__:
         dir_name = "test"
     else:
         dir_name = "results"
 
-    filepath = os.path.join(os.getcwd(), dir_name, filename)
+    return os.path.join(os.getcwd(), dir_name, filename)
+
+
+def save_tikz(filepath: str, figure):
     tikzplotlib.clean_figure()
     tikzplotlib.save(
         filepath,
@@ -130,12 +197,17 @@ def save_tikz(filename: str, figure):
     # noinspection PyUnreachableCode
     # compile and preview latex file
     if __debug__:
-        main_fp = os.path.join(os.getcwd(), dir_name, "main.tex")
-        os.system(
-            "pdflatex -interaction=nonstopmode -synctex=1 -output-format=pdf "
-            + f"-output-directory={dir_name} {main_fp}"
-        )
-        os.system(main_fp.replace(".tex", ".pdf"))
+        compile_tikz("main.tex")
+
+
+def compile_tikz(filename: str) -> None:
+    dir_name = "test"
+    filepath = os.path.join(os.getcwd(), dir_name, filename)
+    os.system(
+        "pdflatex -interaction=nonstopmode -synctex=1 -output-format=pdf "
+        + f"-output-directory={dir_name} {filepath}"
+    )
+    os.system(filepath.replace(".tex", ".pdf"))
 
 
 def _set_colours(ax) -> Tuple[np.ndarray, plt.cm.ScalarMappable]:
