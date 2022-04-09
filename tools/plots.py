@@ -1,25 +1,29 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Tuple
+import os
+from typing import TYPE_CHECKING, Optional, Tuple
 
 import matplotlib as mpl
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import tikzplotlib
 from matplotlib.path import Path
 
 if TYPE_CHECKING:
     from tools.data_types import TimeSeries
 
 
-def plot_smoothed(orig: TimeSeries, smoothed: TimeSeries):
+def plot_smoothed(orig: TimeSeries, smoothed: TimeSeries) -> None:
     plt.plot(orig)
     plt.plot(smoothed)
     plt.show()
 
 
-def hyperparams(df: pd.DataFrame, show: bool = False) -> None:
+def hyperparams(
+    df: pd.DataFrame, show: bool = False, tikz: Optional[str] = None
+) -> None:
     """
     Modified from source: https://stackoverflow.com/questions/8230638/.
     """
@@ -98,8 +102,40 @@ def hyperparams(df: pd.DataFrame, show: bool = False) -> None:
     host.set_title("Model Architecture Hyperparameters", pad=20)
     plt.tight_layout()
 
+    if tikz:
+        save_tikz(tikz, fig)
+
     if show:
         plt.show()
+
+
+def save_tikz(filename: str, figure):
+    # noinspection PyUnreachableCode
+    if __debug__:
+        dir_name = "test"
+    else:
+        dir_name = "results"
+
+    filepath = os.path.join(os.getcwd(), dir_name, filename)
+    tikzplotlib.clean_figure()
+    tikzplotlib.save(
+        filepath,
+        figure=figure,
+        axis_width=r"\w",
+        axis_height=r"\h",
+        strict=True,
+        wrap=False,
+    )
+
+    # noinspection PyUnreachableCode
+    # compile and preview latex file
+    if __debug__:
+        main_fp = os.path.join(os.getcwd(), dir_name, "main.tex")
+        os.system(
+            "pdflatex -interaction=nonstopmode -synctex=1 -output-format=pdf "
+            + f"-output-directory={dir_name} {main_fp}"
+        )
+        os.system(main_fp.replace(".tex", ".pdf"))
 
 
 def _set_colours(ax) -> Tuple[np.ndarray, plt.cm.ScalarMappable]:

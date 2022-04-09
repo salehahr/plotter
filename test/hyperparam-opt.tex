@@ -1,0 +1,155 @@
+% This file was created with tikzplotlib v0.10.1.
+\definecolor{coral23511884}{RGB}{235,118,84}
+\definecolor{darkgray176}{RGB}{176,176,176}
+\definecolor{darkmagenta1030167}{RGB}{103,0,167}
+\definecolor{darkmagenta1110168}{RGB}{111,0,168}
+\definecolor{darkmagenta1140168}{RGB}{114,0,168}
+\definecolor{darkmagenta1304167}{RGB}{130,4,167}
+\definecolor{darkmagenta1378165}{RGB}{137,8,165}
+\definecolor{darkmagenta14010164}{RGB}{140,10,164}
+\definecolor{goldenrod25318543}{RGB}{253,185,43}
+\definecolor{indigo564153}{RGB}{56,4,153}
+\definecolor{indigo980166}{RGB}{98,0,166}
+\definecolor{sandybrown25116256}{RGB}{251,162,56}
+
+\begin{groupplot}[group style={group size=2 by 1}]
+\nextgroupplot[
+height=\h,
+minor xtick={},
+minor ytick={},
+title={Model Architecture Hyperparameters},
+width=\w,
+x grid style={darkgray176},
+xmin=0, xmax=3,
+xtick pos=right,
+xtick style={color=black},
+xtick={0,1,2,3},
+xticklabels={n\_conv2\_blocks,n\_conv3\_blocks,n\_filters,best\_val\_precision},
+y grid style={darkgray176},
+ymin=0.9, ymax=3.1,
+ytick pos=left,
+ytick style={color=black},
+ytick={1,2,3}
+]
+\path [draw=darkmagenta1378165]
+(axis cs:0,2)
+.. controls (axis cs:0.333333333333333,2) and (axis cs:0.666666666666667,2) .. (axis cs:1,2)
+.. controls (axis cs:1.33333333333333,2) and (axis cs:1.66666666666667,1) .. (axis cs:2,1)
+.. controls (axis cs:2.33333333333333,1) and (axis cs:2.66666666666667,2.47348914868865) .. (axis cs:3,2.47348914868865);
+\path [draw=darkmagenta1110168]
+(axis cs:0,3)
+.. controls (axis cs:0.333333333333333,3) and (axis cs:0.666666666666667,1) .. (axis cs:1,1)
+.. controls (axis cs:1.33333333333333,1) and (axis cs:1.66666666666667,3) .. (axis cs:2,3)
+.. controls (axis cs:2.33333333333333,3) and (axis cs:2.66666666666667,2.66368706732667) .. (axis cs:3,2.66368706732667);
+\path [draw=indigo564153]
+(axis cs:0,2)
+.. controls (axis cs:0.333333333333333,2) and (axis cs:0.666666666666667,1) .. (axis cs:1,1)
+.. controls (axis cs:1.33333333333333,1) and (axis cs:1.66666666666667,2) .. (axis cs:2,2)
+.. controls (axis cs:2.33333333333333,2) and (axis cs:2.66666666666667,3) .. (axis cs:3,3);
+\path [draw=darkmagenta1140168]
+(axis cs:0,3)
+.. controls (axis cs:0.333333333333333,3) and (axis cs:0.666666666666667,1) .. (axis cs:1,1)
+.. controls (axis cs:1.33333333333333,1) and (axis cs:1.66666666666667,1) .. (axis cs:2,1)
+.. controls (axis cs:2.33333333333333,1) and (axis cs:2.66666666666667,2.63808854689492) .. (axis cs:3,2.63808854689492);
+\path [draw=darkmagenta1140168]
+(axis cs:0,1)
+.. controls (axis cs:0.333333333333333,1) and (axis cs:0.666666666666667,3) .. (axis cs:1,3)
+.. controls (axis cs:1.33333333333333,3) and (axis cs:1.66666666666667,1.5) .. (axis cs:2,1.5)
+.. controls (axis cs:2.33333333333333,1.5) and (axis cs:2.66666666666667,2.63521423171672) .. (axis cs:3,2.63521423171672);
+\path [draw=indigo980166]
+(axis cs:0,2)
+.. controls (axis cs:0.333333333333333,2) and (axis cs:0.666666666666667,2) .. (axis cs:1,2)
+.. controls (axis cs:1.33333333333333,2) and (axis cs:1.66666666666667,2.5) .. (axis cs:2,2.5)
+.. controls (axis cs:2.33333333333333,2.5) and (axis cs:2.66666666666667,2.74958266855901) .. (axis cs:3,2.74958266855901);
+\path [draw=darkmagenta1304167]
+(axis cs:0,3)
+.. controls (axis cs:0.333333333333333,3) and (axis cs:0.666666666666667,1) .. (axis cs:1,1)
+.. controls (axis cs:1.33333333333333,1) and (axis cs:1.66666666666667,1.5) .. (axis cs:2,1.5)
+.. controls (axis cs:2.33333333333333,1.5) and (axis cs:2.66666666666667,2.52124585208539) .. (axis cs:3,2.52124585208539);
+\path [draw=darkmagenta14010164]
+(axis cs:0,3)
+.. controls (axis cs:0.333333333333333,3) and (axis cs:0.666666666666667,2) .. (axis cs:1,2)
+.. controls (axis cs:1.33333333333333,2) and (axis cs:1.66666666666667,1.5) .. (axis cs:2,1.5)
+.. controls (axis cs:2.33333333333333,1.5) and (axis cs:2.66666666666667,2.45817246760005) .. (axis cs:3,2.45817246760005);
+\path [draw=coral23511884]
+(axis cs:0,1)
+.. controls (axis cs:0.333333333333333,1) and (axis cs:0.666666666666667,1) .. (axis cs:1,1)
+.. controls (axis cs:1.33333333333333,1) and (axis cs:1.66666666666667,2) .. (axis cs:2,2)
+.. controls (axis cs:2.33333333333333,2) and (axis cs:2.66666666666667,1.48521252183801) .. (axis cs:3,1.48521252183801);
+\path [draw=goldenrod25318543]
+(axis cs:0,3)
+.. controls (axis cs:0.333333333333333,3) and (axis cs:0.666666666666667,3) .. (axis cs:1,3)
+.. controls (axis cs:1.33333333333333,3) and (axis cs:1.66666666666667,3) .. (axis cs:2,3)
+.. controls (axis cs:2.33333333333333,3) and (axis cs:2.66666666666667,1) .. (axis cs:3,1);
+\path [draw=sandybrown25116256]
+(axis cs:0,2)
+.. controls (axis cs:0.333333333333333,2) and (axis cs:0.666666666666667,3) .. (axis cs:1,3)
+.. controls (axis cs:1.33333333333333,3) and (axis cs:1.66666666666667,3) .. (axis cs:2,3)
+.. controls (axis cs:2.33333333333333,3) and (axis cs:2.66666666666667,1.15037274606781) .. (axis cs:3,1.15037274606781);
+\path [draw=darkmagenta1030167]
+(axis cs:0,2)
+.. controls (axis cs:0.333333333333333,2) and (axis cs:0.666666666666667,1) .. (axis cs:1,1)
+.. controls (axis cs:1.33333333333333,1) and (axis cs:1.66666666666667,2) .. (axis cs:2,2)
+.. controls (axis cs:2.33333333333333,2) and (axis cs:2.66666666666667,2.71097885087808) .. (axis cs:3,2.71097885087808);
+
+\nextgroupplot[
+axis y line=right,
+height=\h,
+minor xtick={},
+minor ytick={},
+tick align=outside,
+width=\w,
+x grid style={darkgray176},
+xmin=0, xmax=3,
+xtick pos=left,
+xtick style={color=black},
+xtick={0,1,2,3},
+y grid style={darkgray176},
+ymin=0.9, ymax=3.1,
+ytick pos=right,
+ytick style={color=black},
+ytick={1,2,3},
+yticklabel style={anchor=west}
+]
+
+\nextgroupplot[
+axis y line=right,
+height=\h,
+minor xtick={},
+minor ytick={},
+tick align=outside,
+width=\w,
+x grid style={darkgray176},
+xmin=0, xmax=3,
+xtick pos=left,
+xtick style={color=black},
+xtick={0,1,2,3},
+y grid style={darkgray176},
+ymin=1.8, ymax=6.2,
+ytick pos=right,
+ytick style={color=black},
+ytick={2,3,4,5,6},
+yticklabel style={anchor=west}
+]
+
+\nextgroupplot[
+axis y line=right,
+height=\h,
+minor xtick={},
+minor ytick={},
+tick align=outside,
+width=\w,
+x grid style={darkgray176},
+xmin=0, xmax=3,
+xtick pos=left,
+xtick style={color=black},
+xtick={0,1,2,3},
+y grid style={darkgray176},
+ymin=0, ymax=1,
+ytick pos=right,
+ytick style={color=black},
+ytick={0,0.2,0.4,0.6,0.8,1},
+yticklabel style={anchor=west}
+]
+\end{groupplot}
+

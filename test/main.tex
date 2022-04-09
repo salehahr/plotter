@@ -1,0 +1,19 @@
+\documentclass{scrartcl}
+    \usepackage{tikz}
+    \usepackage{pgfplots}
+
+    \DeclareUnicodeCharacter{2212}{−}
+    \usepgfplotslibrary{groupplots, dateplot}
+    \usetikzlibrary{patterns,shapes.arrows}
+    \pgfplotsset{compat=newest}
+
+\begin{document}
+    Test file.
+
+    \def\w{0.8\columnwidth}
+    \def\h{0.4\columnwidth}
+    \begin{tikzpicture}
+        \input{hyperparam-opt}
+    \end{tikzpicture}
+
+\end{document}

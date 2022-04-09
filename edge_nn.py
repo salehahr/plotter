@@ -9,4 +9,10 @@ if __name__ == "__main__":
     config.save_project_summary(api)
 
     df = config.get_sweeps_df(api, config.sweep_id)
-    plots.hyperparams(df)
+
+    tikz_filename = "hyperparam-opt.tex"
+    # noinspection PyUnreachableCode
+    if __debug__:
+        plots.hyperparams(df, show=True, tikz=tikz_filename)
+    else:
+        plots.hyperparams(df, show=False, tikz=tikz_filename)
