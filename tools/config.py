@@ -16,23 +16,30 @@ def get_config(filepath: str) -> Config:
 
 
 class Config(pydantic.BaseModel):
-    # user input
+    # general
     entity: str
+    rel_data_path: str
+
+    # user input
     project: str
     run_id: Optional[str]
 
-    rel_data_path: str
     folder_name: str
-    run_name: str
 
     # derived
     project_path: Optional[str]
     folder_path: Optional[str]
+    run_name: Optional[str]
 
     def __init__(self, filepath: str):
+        with open("configs/general.yaml") as f:
+            gen_data = yaml.load(f, Loader=yaml.FullLoader)
+
         with open(filepath) as f:
-            data = yaml.load(f, Loader=yaml.FullLoader)
-        super(Config, self).__init__(**data)
+            config_data = yaml.load(f, Loader=yaml.FullLoader)
+            config_data.update(gen_data)
+
+        super(Config, self).__init__(**config_data)
 
         self.project_path = f"{self.entity}/{self.project}"
         self.folder_path = self._get_folder_path()
