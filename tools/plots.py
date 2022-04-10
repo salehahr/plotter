@@ -13,6 +13,7 @@ from matplotlib.path import Path
 
 if TYPE_CHECKING:
     from tools.data_types import TimeSeries
+    from tools.config import Config
 
 COLWIDTH = 442.11  # pt
 
@@ -59,7 +60,7 @@ def plot_smoothed(orig: TimeSeries, smoothed: TimeSeries) -> None:
 
 
 def hyperparams(
-    df: pd.DataFrame,
+    config: Config,
     show: bool = False,
     tikz: Optional[str] = None,
     backend: Optional[str] = None,
@@ -78,6 +79,7 @@ def hyperparams(
             }
         )
 
+    df = pd.read_csv(config.sweeps_csv)
     columns = ["n_conv2_blocks", "n_conv3_blocks", "n_filters", "best_val_precision"]
     column_ticks = [[1, 2, 3], [1, 2, 3], [2, 3, 4, 5, 6], np.linspace(0, 1, 5 + 1)]
 

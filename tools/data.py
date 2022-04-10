@@ -9,7 +9,6 @@ from tools import filter, plots
 if TYPE_CHECKING:
     import wandb
 
-    from tools.config import Config
     from tools.data_types import Number, ParamsDict
 
 
@@ -18,7 +17,7 @@ def get_losses(metrics: pd.DataFrame) -> pd.DataFrame:
     return metrics[columns]
 
 
-def get_runs_df(runs: wandb.apis.public.Runs):
+def get_runs_df(runs: wandb.apis.public.Runs) -> pd.DataFrame:
     ids, names, train_params, model_arch_params, summary = [], [], [], [], []
     for run in runs:
         ids.append(run.id)
@@ -94,21 +93,9 @@ def flatten(df: pd.DataFrame, cols_to_flatten: List[str]) -> pd.DataFrame:
     )
 
 
-def save_project_summary(df: pd.DataFrame, config: Config) -> None:
-    # general
-    save(df, config, "runs.csv")
-
-    # sweep
-    sweep_mask = df["name"].str.contains("sweep")
-    sweeps_df = df[sweep_mask].drop("train_params", axis=1)
-    sweeps_filepath = config.gen_filepath("sweeps.csv")
-    save_flat(sweeps_df, config, sweeps_filepath)
-
-
 def save_metrics(
     data: pd.DataFrame,
-    config: Config,
-    filename: Optional[str] = None,
+    filepath: Optional[str] = None,
     smooth: bool = True,
 ) -> None:
     # smooth data
@@ -123,20 +110,13 @@ def save_metrics(
 
         data = pd.concat([data, smoothed], axis=1)
 
-    save(data, config, filename, index_label="epoch", float_format="%.4f")
+    # noinspection PyTypeChecker
+    data.to_csv(filepath, index_label="epoch", float_format="%.4f")
 
 
-def save_flat(df: pd.DataFrame, config: Config, filename: str, **kwargs) -> None:
-    filepath = config.gen_filepath(filename)
-
-    cols_to_flatten = ["model_arch_params", "summary"]
+def save_flat(df: pd.DataFrame, filepath: str, **kwargs) -> None:
+    cols_to_flatten = ["model_arch_params", "train_params", "summary"]
     flat_df = flatten(df, cols_to_flatten)
 
     # noinspection PyTypeChecker
     flat_df.to_csv(filepath, **kwargs)
-
-
-def save(data: pd.DataFrame, config: Config, filename: str, **kwargs) -> None:
-    filepath = config.gen_filepath(filename)
-    # noinspection PyTypeChecker
-    data.to_csv(filepath, **kwargs)

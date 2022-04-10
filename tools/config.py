@@ -33,10 +33,16 @@ class Config(pydantic.BaseModel):
 
     folder_name: str
 
-    # derived
+    # derived - for api
     project_path: Optional[str]
+
+    # derived - for csv files
     folder_path: Optional[str]
     run_name: Optional[str]
+
+    runs_csv: Optional[str]
+    training_csv: Optional[str]
+    sweeps_csv: Optional[str]
 
     def __init__(self, filepath: str):
         with open("configs/general.yaml") as f:
@@ -50,6 +56,10 @@ class Config(pydantic.BaseModel):
 
         self.project_path = f"{self.entity}/{self.project}"
         self.folder_path = self._get_folder_path()
+
+        self.runs_csv = self.gen_filepath("runs.csv")
+        self.training_csv = self.gen_filepath("training.csv")
+        self.sweeps_csv = self.gen_filepath("sweeps.csv")
 
     def get_runs(self, api: wandb.Api, **kwargs) -> WandbRuns:
         return api.runs(f"{self.project_path}", **kwargs)
@@ -91,8 +101,17 @@ class Config(pydantic.BaseModel):
         return os.path.join(self.folder_path, filename)
 
     def save_project_summary(self, api: wandb.Api) -> None:
+        # all runs
         runs_df = self.get_runs_df(api)
-        data.save_project_summary(runs_df, self)
+        runs_df.to_csv(self.runs_csv)
+
+        # training
+        training_runs_df = self.get_runs_df(api, filters={"tags": "train_hyp"})
+        data.save_flat(training_runs_df, self.training_csv)
+
+        # sweeps
+        sweeps_df = self.get_sweeps_df(api, self.sweep_id)
+        sweeps_df.to_csv(self.sweeps_csv)
 
     def update_config(
         self,

@@ -8,11 +8,9 @@ api = wandb.Api()
 if __name__ == "__main__":
     config.save_project_summary(api)
 
-    df = config.get_sweeps_df(api, config.sweep_id)
-
     tikz_filename = "hyperparam-opt.tex"
     # noinspection PyUnreachableCode
     if __debug__:
-        plots.hyperparams(df, show=True, tikz=tikz_filename, backend='pgf')
+        plots.hyperparams(config, show=True, tikz=tikz_filename, backend="pgf")
     else:
-        plots.hyperparams(df, show=False, tikz=tikz_filename)
+        plots.hyperparams(config, show=False, tikz=tikz_filename)

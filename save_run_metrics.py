@@ -7,5 +7,7 @@ api = wandb.Api()
 
 if __name__ == "__main__":
     metrics = config.get_metrics(api)
+
     losses = data.get_losses(metrics)
-    data.save_metrics(losses, config)
+    lossses_csv = config.gen_filepath("losses")
+    data.save_metrics(losses, lossses_csv)
