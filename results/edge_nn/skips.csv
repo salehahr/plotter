@@ -1,0 +1,5 @@
+,id,name,batch_norm,n_filters,n_conv2_blocks,n_conv3_blocks,optimiser,learning_rate,batch_size,node_pairs_in_batch,adjacency_frac,train_imgs,best_epoch,best_val_loss,best_val_accuracy,epoch,_runtime,_step,_timestamp
+0,1wa53k5i,vgg_mod_b3,True,6.0,2.0,2.0,adam,0.001,8.0,4.0,0.5,160.0,95.0,0.14801354706287384,0.9124999940395356,116.0,551182.0,116.0,1646861361.0
+1,a647bpoi,vgg_3ch,,8.0,2.0,3.0,,1e-05,4.0,8.0,,,0.0,0.6916033029556274,0.5,18.0,6451.0,18.0,1646053058.0
+2,3cbxz59l,vgg_2ch,,8.0,2.0,3.0,,0.001,4.0,8.0,,,2.0,0.6930554509162903,0.5,13.0,2014.0,13.0,1645892649.0
+3,3bpkl2by,vgg_2ch,,4.0,2.0,3.0,,,4.0,8.0,,,14.0,0.6931766271591187,0.5026442408561707,19.0,29365.0,19.0,1645753264.0
