@@ -28,19 +28,20 @@ class Config(pydantic.BaseModel):
 
     # user input
     project: str
-    run_id: Optional[str]
+    run_id: Optional[Union[str, List[str]]]
     sweep_id: Optional[str]
 
     folder_name: str
 
     # derived - for api
     project_path: Optional[str]
+    multiple_runs: Optional[bool] = False
 
     # derived - for csv files
     folder_path: Optional[str]
     run_name: Optional[str]
 
-    runs_csv: Optional[str]
+    all_runs_csv: Optional[str]
     training_csv: Optional[str]
     sweeps_csv: Optional[str]
 
@@ -57,12 +58,18 @@ class Config(pydantic.BaseModel):
         self.project_path = f"{self.entity}/{self.project}"
         self.folder_path = self._get_folder_path()
 
-        self.runs_csv = self.gen_filepath("runs.csv")
+        if self.run_id is None or isinstance(self.run_id, list):
+            self.multiple_runs = True
+
+        self.all_runs_csv = self.gen_filepath("runs.csv")
         self.training_csv = self.gen_filepath("training.csv")
         self.sweeps_csv = self.gen_filepath("sweeps.csv")
 
-    def get_runs(self, api: wandb.Api, **kwargs) -> WandbRuns:
-        return api.runs(f"{self.project_path}", **kwargs)
+    def get_runs(self, api: wandb.Api, all: bool = True, **kwargs) -> WandbRuns:
+        if all:
+            return api.runs(f"{self.project_path}", **kwargs)
+        else:
+            pass
 
     def get_runs_df(self, api: wandb.Api, **kwargs) -> pd.DataFrame:
         runs = self.get_runs(api, **kwargs)
@@ -82,10 +89,6 @@ class Config(pydantic.BaseModel):
         assert self.run_id is not None
         return api.run(f"{self.project_path}/{self.run_id}")
 
-    def get_metrics(self, api: wandb.Api) -> pd.DataFrame:
-        run = self.get_run(api)
-        return run.history()
-
     def gen_filepath(self, filename: Optional[str] = None) -> str:
         # parse filename
         if self.run_name is None:
@@ -103,7 +106,7 @@ class Config(pydantic.BaseModel):
     def save_project_summary(self, api: wandb.Api) -> None:
         # all runs
         runs_df = self.get_runs_df(api)
-        runs_df.to_csv(self.runs_csv)
+        runs_df.to_csv(self.all_runs_csv)
 
         # training
         training_runs_df = self.get_runs_df(api, filters={"tags": "train_hyp"})

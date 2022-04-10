@@ -27,6 +27,6 @@ def rolling(s: TimeSeries) -> TimeSeries:
     return s.rolling(window=10).mean().fillna(method="bfill")
 
 
-def gaussian_smooth(s: TimeSeries, points: int = 10, stdev: int = 1) -> TimeSeries:
+def gaussian_smooth(s: TimeSeries, points: int = 10, stdev: float = 1) -> TimeSeries:
     b = gaussian(points, stdev)
     return filters.convolve1d(s, b / b.sum())

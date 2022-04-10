@@ -94,14 +94,20 @@ def flatten(df: pd.DataFrame, cols_to_flatten: List[str]) -> pd.DataFrame:
 
 
 def save_metrics(
-    data: pd.DataFrame,
+    run: wandb.apis.public.Run,
+    metrics: List[str],
     filepath: Optional[str] = None,
     smooth: bool = True,
 ) -> None:
+    metrics = metrics + [f"val_{m}" for m in metrics]
+
+    history = run.history()
+    data = history[metrics]
+
     # smooth data
     if smooth:
         smoothed = data.apply(
-            lambda s: filter.gaussian_smooth(s, points=10, stdev=1)
+            lambda s: filter.gaussian_smooth(s, points=10, stdev=1.5)
         ).add_suffix("_sm")
 
         # noinspection PyUnreachableCode
