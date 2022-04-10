@@ -43,6 +43,7 @@ class Config(pydantic.BaseModel):
 
     all_runs_csv: Optional[str]
     training_csv: Optional[str]
+    skips_csv: Optional[str]
     sweeps_csv: Optional[str]
 
     def __init__(self, filepath: str):
@@ -62,6 +63,7 @@ class Config(pydantic.BaseModel):
             self.multiple_runs = True
 
         self.all_runs_csv = self.gen_filepath("runs.csv")
+        self.skips_csv = self.gen_filepath("skips.csv")
         self.training_csv = self.gen_filepath("training.csv")
         self.sweeps_csv = self.gen_filepath("sweeps.csv")
 
@@ -69,7 +71,7 @@ class Config(pydantic.BaseModel):
         if all:
             return api.runs(f"{self.project_path}", **kwargs)
         else:
-            pass
+            return [api.run(f"{self.project_path}/{id}") for id in self.run_id]
 
     def get_runs_df(self, api: wandb.Api, **kwargs) -> pd.DataFrame:
         runs = self.get_runs(api, **kwargs)
@@ -104,9 +106,13 @@ class Config(pydantic.BaseModel):
         return os.path.join(self.folder_path, filename)
 
     def save_project_summary(self, api: wandb.Api) -> None:
-        # all runs
+        # # all runs
         runs_df = self.get_runs_df(api)
         runs_df.to_csv(self.all_runs_csv)
+
+        # skips
+        skips_df = self.get_runs_df(api, filters={"tags": "skip"})
+        data.save_flat(skips_df, self.skips_csv)
 
         # training
         training_runs_df = self.get_runs_df(api, filters={"tags": "train_hyp"})
