@@ -79,16 +79,21 @@ def hyperparams(
             }
         )
 
-    # get only mature runs
+    # get only mature runs, convert booleans
     df = pd.read_csv(config.sweeps_csv)
     df = df[df["epoch"] == 53]
+    df[r"\bn{}"] = df[r"\bn{}"].map({r"\true": 1, r"\false": 0})
+
+    # sort so that higher precision values are the last/in front when plotting
+    df = df.sort_values(by="best val. precision", ascending=True)
 
     # column settings
     metric_key = "best val. precision"
     min_val, max_val = 0.7, 1.0
-    columns = [r"$\nctwo$", r"$\ncthr$", r"$\filtsym$", metric_key]
-    column_labels = ["$nc_2$", "$nc_3$", "$f$", metric_key]
+    columns = [r"\bn{}", r"$\nctwo$", r"$\ncthr$", r"$\filtsym$", metric_key]
+    column_labels = ["bn", "$nc_2$", "$nc_3$", "$f$", metric_key]
     column_ticks = [
+        [0, 1],
         [1, 2, 3],
         [1, 2, 3],
         [2, 3, 4, 5, 6],
@@ -161,7 +166,7 @@ def hyperparams(
 
         # noinspection PyTypeChecker
         path = Path(verts, codes)
-        patch = patches.PathPatch(path, facecolor="none", lw=1, edgecolor=colour)
+        patch = patches.PathPatch(path, facecolor="none", lw=1.5, edgecolor=colour)
 
         host.add_patch(patch)
 

@@ -11,6 +11,6 @@ if __name__ == "__main__":
     tikz_filename = "hyperparam-opt.tex"
     # noinspection PyUnreachableCode
     if __debug__:
-        plots.hyperparams(config, show=True, tikz=tikz_filename, backend="pgf")
+        plots.hyperparams(config, show=True, tikz=tikz_filename, backend="tpl")
     else:
         plots.hyperparams(config, show=False, tikz=tikz_filename)
