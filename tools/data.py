@@ -53,7 +53,7 @@ def get_run_summary(run: wandb.apis.public.Run) -> Dict[str, Number]:
     for k in ["graph", "_wandb"]:
         summary.pop(k, None)
 
-    return summary
+    return {_parse_key(k): v for k, v in summary.items()}
 
 
 def get_run_params(run: wandb.apis.public.Run) -> Tuple[ParamsDict, ParamsDict]:
@@ -75,22 +75,54 @@ def get_run_params(run: wandb.apis.public.Run) -> Tuple[ParamsDict, ParamsDict]:
     ]
 
     params = run.config
-    training_params = {k: run.config[k] for k in training_keys if k in params.keys()}
+    training_params = {
+        _parse_key(k): run.config[k] for k in training_keys if k in params.keys()
+    }
     model_arch_params = {
-        k: run.config[k] for k in model_arch_keys if k in params.keys()
+        _parse_key(k): run.config[k] for k in model_arch_keys if k in params.keys()
     }
 
     return training_params, model_arch_params
 
 
+def _parse_key(key: str) -> str:
+    """For LaTeX. Removes underscores, inserts predefined LaTeX macros."""
+    macros = {
+        "batch_norm": r"\bn{}",
+        "n_filters": r"$\filtsym$",
+        "n_conv2_blocks": r"$\nctwo$",
+        "n_conv3_blocks": r"$\ncthr$",
+    }
+
+    shortcuts = {"best_val_": "best val. ", "_": " "}
+
+    for k in macros.keys():
+        if key == k:
+            return macros[k]
+
+    for s in shortcuts:
+        if s in key:
+            key = key.replace(s, shortcuts[s])
+
+    return key
+
+
+def parse_booleans(df: pd.DataFrame) -> pd.DataFrame:
+    mask = df.applymap(type) != bool
+    d = {True: r"\true", False: r"\false"}
+    return df.where(mask, df.replace(d))
+
+
 def flatten(df: pd.DataFrame, cols_to_flatten: List[str]) -> pd.DataFrame:
-    return pd.concat(
+    df = pd.concat(
         [
             df.drop(cols_to_flatten, axis=1),
             *[df[col].apply(pd.Series) for col in cols_to_flatten],
         ],
         axis=1,
     )
+
+    return parse_booleans(df)
 
 
 def save_metrics(

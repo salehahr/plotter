@@ -85,7 +85,10 @@ class Config(pydantic.BaseModel):
         df = data.get_runs_df(sweep.runs).drop("train_params", axis=1)
 
         cols_to_flatten = ["model_arch_params", "summary"]
-        return data.flatten(df, cols_to_flatten)
+        df = data.flatten(df, cols_to_flatten)
+
+        # sorted
+        return df.sort_values(by="best val. precision", ascending=False)
 
     def get_run(self, api: wandb.Api) -> wandb.apis.public.Run:
         assert self.run_id is not None
