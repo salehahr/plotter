@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import os
-from typing import TYPE_CHECKING, Optional, Tuple
+from typing import TYPE_CHECKING, Callable, Optional, Tuple
 
 import matplotlib as mpl
 import matplotlib.patches as patches
@@ -79,9 +79,21 @@ def hyperparams(
             }
         )
 
+    # get only mature runs
     df = pd.read_csv(config.sweeps_csv)
-    columns = [r"$\nctwo$", r"$\ncthr$", "$\filtsym$", "best val. precision"]
-    column_ticks = [[1, 2, 3], [1, 2, 3], [2, 3, 4, 5, 6], np.linspace(0, 1, 5 + 1)]
+    df = df[df["epoch"] == 53]
+
+    # column settings
+    metric_key = "best val. precision"
+    min_val, max_val = 0.7, 1.0
+    columns = [r"$\nctwo$", r"$\ncthr$", r"$\filtsym$", metric_key]
+    column_labels = ["$nc_2$", "$nc_3$", "$f$", metric_key]
+    column_ticks = [
+        [1, 2, 3],
+        [1, 2, 3],
+        [2, 3, 4, 5, 6],
+        np.linspace(min_val, max_val, 4 + 1),
+    ]
 
     num_params = len(columns)
     num_runs = len(df)
@@ -121,19 +133,19 @@ def hyperparams(
     # horizontal axis settings
     host.set_xlim(0, num_params - 1)
     host.set_xticks(range(num_params))
-    host.set_xticklabels(columns)
+    host.set_xticklabels(column_labels)
     host.tick_params(axis="x", which="major", direction="in", pad=7)
     host.xaxis.tick_top()
 
-    colours, colourbar = _set_colours(col_ax)
+    colours, colourbar = _set_colours(col_ax, min_val, max_val)
     for r in range(num_runs):
-        best_val_prec = df["best_val_precision"].iloc[r]
-        colour = colours[int(best_val_prec * 100)]
+        best_metric = df[metric_key].iloc[r]
+        colour = colours(best_metric)
 
-        # straight line
+        # straight lines
         # host.plot(range(num_params), Z[r, :], c=colour)
 
-        # bezier
+        # beziers
         verts = list(
             zip(
                 [
@@ -212,11 +224,13 @@ def compile_tikz(filename: str) -> None:
     os.system(filepath.replace(".tex", ".pdf"))
 
 
-def _set_colours(ax) -> Tuple[np.ndarray, plt.cm.ScalarMappable]:
+def _set_colours(
+    ax, min_val: float, max_val: float
+) -> Tuple[Callable, plt.cm.ScalarMappable]:
     cm_divisions = 100
     cmap = plt.get_cmap("plasma_r", cm_divisions)
 
-    norm = mpl.colors.Normalize(vmin=0, vmax=1)
+    norm = mpl.colors.Normalize(vmin=min_val, vmax=max_val)
     sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
     sm.set_array([])
 
@@ -224,7 +238,11 @@ def _set_colours(ax) -> Tuple[np.ndarray, plt.cm.ScalarMappable]:
         ax, cmap=cmap, norm=norm, orientation="vertical"
     )
 
-    return cmap.colors, colourbar
+    def colours_normed(metric: float) -> np.ndarray:
+        x = int(norm(metric) * 100)
+        return cmap.colors[x]
+
+    return colours_normed, colourbar
 
 
 def _transform_tuning_data(
