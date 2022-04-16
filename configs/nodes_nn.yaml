@@ -1,0 +1,6 @@
+project: node_extraction
+run_id: ["5xo1nzt1", "3ee26r9o", "91pmt9xd"]
+
+# data folder settings
+folder_name: nodes_nn
+run_name: null

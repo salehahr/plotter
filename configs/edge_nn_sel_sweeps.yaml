@@ -1,0 +1,6 @@
+project: edge_extraction
+run_id: ["rqvcpm69", "5qooe1a2", "yb0kf4h2", "nx54kzaf", "98nmay56", "u8maqioh"]
+
+# data folder settings
+folder_name: edge_nn
+run_name: null
