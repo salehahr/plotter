@@ -1,5 +1,5 @@
-,id,name,\bn{},$\filtsym$,$\nctwo$,$\ncthr$,optimiser,learning rate,batch size,node pairs in batch,adjacency frac,train imgs,best val. accuracy, step,epoch,best epoch, timestamp,best val. loss, runtime
-0,1wa53k5i,vgg_mod_b3,\true,6.0,2.0,2.0,adam,0.001,8.0,4.0,0.5,160.0,0.9124999940395356,116.0,116.0,95.0,1646861361.0,0.14801354706287384,551182.0
-1,a647bpoi,vgg_3ch,,8.0,2.0,3.0,,1e-05,4.0,8.0,,,0.5,18.0,18.0,0.0,1646053058.0,0.6916033029556274,6451.0
-2,3cbxz59l,vgg_2ch,,8.0,2.0,3.0,,0.001,4.0,8.0,,,0.5,13.0,13.0,2.0,1645892649.0,0.6930554509162903,2014.0
-3,3bpkl2by,vgg_2ch,,4.0,2.0,3.0,,,4.0,8.0,,,0.5026442408561707,19.0,19.0,14.0,1645753264.0,0.6931766271591187,29365.0
+,id,name,\bn{},$\filtsym$,$\nctwo$,$\ncthr$,optimiser,learning rate,batch size,node pairs in batch,adjacency frac,train imgs,epoch, runtime,best val. loss, step, timestamp,best epoch,best val. accuracy
+0,1wa53k5i,vgg_mod_b3,\true,6.0,2.0,2.0,adam,0.001,8.0,4.0,0.5,160.0,116.0,551182.0,0.14801354706287384,116.0,1646861361.0,95.0,0.9124999940395356
+1,a647bpoi,vgg_3ch,,8.0,2.0,3.0,,1e-05,4.0,8.0,,,18.0,6451.0,0.6916033029556274,18.0,1646053058.0,0.0,0.5
+2,3cbxz59l,vgg_2ch,,8.0,2.0,3.0,,0.001,4.0,8.0,,,13.0,2014.0,0.6930554509162903,13.0,1645892649.0,2.0,0.5
+3,3bpkl2by,vgg_2ch,,4.0,2.0,3.0,,,4.0,8.0,,,19.0,29365.0,0.6931766271591187,19.0,1645753264.0,14.0,0.5026442408561707
