@@ -149,7 +149,7 @@ def save_metrics(
         data = pd.concat([data, smoothed], axis=1)
 
     # noinspection PyTypeChecker
-    data.to_csv(filepath, index_label="epoch", float_format="%.4f")
+    data.to_csv(filepath, index_label="epoch", float_format="%.7f")
 
 
 def save_flat(df: pd.DataFrame, filepath: str, **kwargs) -> None:
